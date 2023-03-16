@@ -1,0 +1,10 @@
+1. Learn Javascript
+The Javascript and JQuery book
+
+2. Learn Bootstrap well
+Front-End Web UI Frameworks and Tools: Bootstrap 4
+
+3. Learn React
+Build a Website using React
+React Native : https://app.pluralsight.com/paths/skill/build-mobile-applications-with-react-native
+

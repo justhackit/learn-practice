@@ -1,0 +1,28 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: todos-svc-deployment
+  name: todos-svc-deployment
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: todos-svc-deployment
+  strategy:
+    type: RollingUpdate
+  template:
+    metadata:
+      labels:
+        app: todos-svc-deployment
+    spec:
+      containers:
+        - name: todos-svc-deployment
+          image: ajayedap/cloudlifter-images:todos-api
+          #args:
+          # - "./auth-service"
+          # - "/etc/auth-svc-config/client.yaml"
+          #- "-level=debug"
+          imagePullPolicy: Always
+      imagePullSecrets:
+        - name: dockercreds

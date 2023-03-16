@@ -1,0 +1,61 @@
+{
+  "streams": [
+    {
+      "title": "test1",
+      "description": "desc1",
+      "id": 1
+    },
+    {
+      "title": "My Second Stream",
+      "description": "This is great stream",
+      "id": 2
+    },
+    {
+      "title": "Stream 3",
+      "description": "this is more better",
+      "id": 3
+    },
+    {
+      "title": "I created this title",
+      "description": "This is created by me",
+      "userId": "110594754086467557625",
+      "id": 4
+    },
+    {
+      "title": "My Stream created by me",
+      "description": "another stream",
+      "userId": "110594754086467557625",
+      "id": 5
+    },
+    {
+      "title": "Programmatic Nav",
+      "description": "you should not see this",
+      "userId": "110594754086467557625",
+      "id": 6
+    },
+    {
+      "title": "I am another test stream",
+      "description": "yes, i am",
+      "userId": "110594754086467557625",
+      "id": 7
+    },
+    {
+      "title": "just a test",
+      "description": "hello description",
+      "userId": "110594754086467557625",
+      "id": 8
+    },
+    {
+      "title": "another title",
+      "description": "another desc",
+      "userId": "110594754086467557625",
+      "id": 9
+    },
+    {
+      "title": "A test",
+      "description": "another test",
+      "userId": "110594754086467557625",
+      "id": 10
+    }
+  ]
+}

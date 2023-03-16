@@ -1,0 +1,44 @@
+name: todos-api-ci
+on:
+  push:
+    branches:
+      - "master"
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: ./todos
+    steps:
+      - name: Checkout        
+        uses: actions/checkout@v2
+      - name: Login to Docker Hub              
+        uses: docker/login-action@v1
+        with:
+          username: ${{ secrets.DOCKER_HUB_USERNAME }}
+          password: ${{ secrets.DOCKER_HUB_PASSWORD }}
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v1
+      - name: Build and push
+        uses: docker/build-push-action@v2
+        with:
+          context: .
+          file: todos/Dockerfile
+          push: true
+          tags: |
+            ${{ secrets.DOCKER_HUB_USERNAME }}/cloudlifter-images:todos-api
+      - name: Create Kubeconfig
+        run: |
+          mkdir ${HOME}/.kube
+          echo ${{secrets.TP_KUBE_CONFIG}} | base64 --decode > ${HOME}/.kube/config
+          cat ${HOME}/.kube/config
+      - name: Use context
+        run: kubectl config use-context main-microk8s
+      - name: Test k8s connectivity
+        run: kubectl get pods
+      - name: Deploy to k8s        
+        run: |
+          kubectl delete -f todos/deployment/todos-api-deployment.yaml
+          kubectl delete -f todos/deployment/todos-api-service.yaml
+          kubectl apply -f todos/deployment/todos-api-deployment.yaml
+          kubectl apply -f todos/deployment/todos-api-service.yaml

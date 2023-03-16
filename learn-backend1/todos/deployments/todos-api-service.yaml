@@ -1,0 +1,13 @@
+kind: Service
+apiVersion: v1
+metadata:
+  name: todos-svc-deployment
+  labels:
+    app: todos-svc-deployment
+spec:
+  type: ClusterIP
+  selector:
+    app: todos-svc-deployment
+  ports:
+    - port: 8090
+      targetPort: 8090

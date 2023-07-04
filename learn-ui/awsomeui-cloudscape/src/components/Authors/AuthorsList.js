@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   Box,
   Button,
@@ -7,10 +7,10 @@ import {
   Table,
   TextFilter,
   CollectionPreferences,
+  SpaceBetween,
 } from '@cloudscape-design/components';
 import { useCollection } from '@cloudscape-design/collection-hooks';
-
-import { authors, authorsStatic } from './AuthorsDB';
+import { getAuthors, deleteAuthor } from './AuthorsService';
 
 const COLUMN_DEFNITIONS = [
   {
@@ -96,7 +96,7 @@ function EmptyTableSate({ title, subTitle, action }) {
   );
 }
 
-function AuthorsList() {
+function AuthorsList(props) {
   const [preferences, setPreferences] = useState({
     visibleContent: ['id', 'name', 'country'],
     pageSize: 10,
@@ -105,6 +105,9 @@ function AuthorsList() {
     setPreferences(prefs.detail);
   };
 
+  const [allItems, setAllItems] = useState([]);
+  const [fetchingAuthors, setFetchingAuthors] = useState(false);
+
   const {
     items,
     actions,
@@ -112,7 +115,7 @@ function AuthorsList() {
     collectionProps,
     filterProps,
     paginationProps,
-  } = useCollection(authorsStatic, {
+  } = useCollection(allItems, {
     filtering: {
       empty: (
         <EmptyTableSate
@@ -144,15 +147,71 @@ function AuthorsList() {
 
   const { selectedItems } = collectionProps;
 
+  const getAuthorsHelper = () => {
+    setFetchingAuthors(true);
+    getAuthors().then((authors) => {
+      setAllItems(authors);
+      setFetchingAuthors(false);
+    });
+  };
+
+  useEffect(() => {
+    getAuthorsHelper();
+  }, []);
+
+  const handleEdit = (id) => {};
+  const handleCreate = () => {};
+  const handleDelete = () => {
+    const selectedId = selectedItems[0].id;
+    const confirm = window.confirm(
+      `Are you sure you want to delete user ${selectedItems[0].name}`
+    );
+    if (confirm) {
+      deleteAuthor(selectedId).then(() => {
+        console.log('Author deleted');
+        props.setShowNotifications([
+          {
+            type: 'success',
+            content: `Author deleted successfully`,
+            dismissible: true,
+            onDismiss: () => {
+              props.setShowNotifications([]);
+            },
+          },
+        ]);
+        getAuthorsHelper();
+      });
+    }
+  };
+
   return (
     <Table
       {...collectionProps}
+      loadingText="Fetching authors.."
+      loading={fetchingAuthors}
       header={
         <Header
           counter={
             selectedItems.length
-              ? `${selectedItems.length}/${authorsStatic.length}`
-              : `${authorsStatic.length}`
+              ? `${selectedItems.length}/${allItems.length}`
+              : `${allItems.length}`
+          }
+          actions={
+            <SpaceBetween size="xs" direction="horizontal">
+              <Button
+                disabled={selectedItems.length === 0}
+                onClick={handleDelete}
+              >
+                Delete
+              </Button>
+              <Button
+                disabled={selectedItems.length === 0}
+                onClick={handleEdit}
+              >
+                Edit
+              </Button>
+              <Button onClick={handleCreate}>Create Author</Button>
+            </SpaceBetween>
           }
         >
           Authors
@@ -163,8 +222,8 @@ function AuthorsList() {
       filter={
         <TextFilter
           {...filterProps}
-          filteringPlaceholder="Find Text..."
-          countText={filteredItemsCount}
+          filteringPlaceholder="Find an Author..."
+          countText={`${filteredItemsCount} match found`}
         />
       }
       pagination={<Pagination {...paginationProps} />}
@@ -175,7 +234,7 @@ function AuthorsList() {
         />
       }
       items={items}
-      selectionType="multi"
+      selectionType="single"
     ></Table>
   );
 }

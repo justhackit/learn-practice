@@ -1,8 +1,8 @@
 // Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved. // SPDX-License-Identifier: MIT-0
-import React from 'react';
+import React, { useState } from 'react';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 
-import { AppLayout } from '@cloudscape-design/components';
+import { AppLayout, Flashbar } from '@cloudscape-design/components';
 import { Box } from '@cloudscape-design/components';
 
 import NavigationDrawer from './components/Navigation/NavigationDrawer';
@@ -15,15 +15,22 @@ function NotFoundPage() {
 }
 
 function App() {
+  const [showNotifications, setShowNotifications] = useState([]);
   return (
     <BrowserRouter>
       <AppLayout
         navigation={<NavigationDrawer></NavigationDrawer>}
         tools={<ToolsDrawer></ToolsDrawer>}
+        notifications={<Flashbar items={showNotifications} />}
         content={
           <Routes>
             <Route path="/" element={<Dashboard />}></Route>
-            <Route path="/authors" element={<AuthorsList />}></Route>
+            <Route
+              path="/authors"
+              element={
+                <AuthorsList setShowNotifications={setShowNotifications} />
+              }
+            ></Route>
             <Route path="*" element={<NotFoundPage />}></Route>
           </Routes>
         }

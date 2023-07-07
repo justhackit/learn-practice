@@ -6,17 +6,25 @@ import {
   Pagination,
   Table,
   TextFilter,
-  CollectionPreferences,
   SpaceBetween,
+  CollectionPreferences,
 } from '@cloudscape-design/components';
+//import { authors } from './AuthorsDB'
 import { useCollection } from '@cloudscape-design/collection-hooks';
 import { getAuthors, deleteAuthor } from './AuthorsService';
+import { useNavigate } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 
-const COLUMN_DEFNITIONS = [
+const COLUMN_DEFINITIONS = [
   {
     id: 'id',
+    sortingField: 'id',
     header: 'Id',
-    cell: (item) => item.id,
+    cell: (item) => (
+      <div>
+        <Link to={`/author/${item.id}`}>{item.id}</Link>
+      </div>
+    ),
     width: 50,
   },
   {
@@ -38,44 +46,32 @@ const COLUMN_DEFNITIONS = [
 const MyCollectionPreferences = ({ preferences, setPreferences }) => {
   return (
     <CollectionPreferences
-      preferences={preferences}
-      onConfirm={(detail) => {
-        setPreferences(detail);
-      }}
       title="Preferences"
       confirmLabel="Confirm"
       cancelLabel="Cancel"
+      preferences={preferences}
+      onConfirm={({ detail }) => setPreferences(detail)}
       pageSizePreference={{
-        title: 'Page size',
+        title: 'Page size',
         options: [
-          { value: 5, label: '5 Authors' },
-          { value: 10, label: '10 Authors' },
-          { value: 20, label: '20 Authors' },
+          { value: 10, label: '10 Authors' },
+          { value: 30, label: '30 Authors' },
+          { value: 50, label: '50 Authors' },
         ],
       }}
       wrapLinesPreference={{
-        label: 'Wrap Lines',
-        description: 'Check to see all the text and wrap the lines',
+        label: 'Wrap lines',
+        description: 'Check to see all the text and wrap the lines',
       }}
       visibleContentPreference={{
-        title: 'Select visible columns',
+        title: 'Select visible columns',
         options: [
           {
             label: 'Author properties',
             options: [
-              {
-                id: 'id',
-                label: 'Id',
-                editable: false,
-              },
-              {
-                id: 'name',
-                label: 'Name',
-              },
-              {
-                id: 'country',
-                label: 'Country',
-              },
+              { id: 'id', label: 'Id', editable: false },
+              { id: 'name', label: 'Name' },
+              { id: 'country', label: 'Country' },
             ],
           },
         ],
@@ -84,30 +80,25 @@ const MyCollectionPreferences = ({ preferences, setPreferences }) => {
   );
 };
 
-function EmptyTableSate({ title, subTitle, action }) {
+function EmptyState({ title, subtitle, action }) {
   return (
     <Box textAlign="center">
       <Box variant="strong">{title}</Box>
-      <Box variant="p" padding={{ bottom: 1 }}>
-        {subTitle}
+      <Box variant="p" padding={{ bottom: 's' }}>
+        {subtitle}
       </Box>
-      <Box>{action}</Box>
+      {action}
     </Box>
   );
 }
 
-function AuthorsList(props) {
-  const [preferences, setPreferences] = useState({
-    visibleContent: ['id', 'name', 'country'],
-    pageSize: 10,
-  });
-  const handleSetPreferences = (prefs) => {
-    setPreferences(prefs.detail);
-  };
-
+export default function AuthorsList(props) {
   const [allItems, setAllItems] = useState([]);
-  const [fetchingAuthors, setFetchingAuthors] = useState(false);
-
+  const [preferences, setPreferences] = useState({
+    pageSize: 10,
+    visibleContent: ['id', 'name', 'country'],
+  });
+  const [tableLoading, setTableLoading] = useState(false);
   const {
     items,
     actions,
@@ -118,23 +109,19 @@ function AuthorsList(props) {
   } = useCollection(allItems, {
     filtering: {
       empty: (
-        <EmptyTableSate
-          title="No Authors"
-          subTitle="No Authors to display"
-          action={<Button>Create Author</Button>}
+        <EmptyState
+          title="No authors"
+          subtitle="No authors to display."
+          action={<Button>Create author</Button>}
         />
       ),
       noMatch: (
-        <EmptyTableSate
-          title="No Matches"
-          subTitle="Search did not return any results"
+        <EmptyState
+          title="No matches"
+          subtitle="Your search didn't return any records."
           action={
-            <Button
-              onClick={() => {
-                actions.setFiltering('');
-              }}
-            >
-              Clear Filters
+            <Button onClick={() => actions.setFiltering('')}>
+              Clear filter
             </Button>
           }
         />
@@ -146,97 +133,103 @@ function AuthorsList(props) {
   });
 
   const { selectedItems } = collectionProps;
+  const history = useNavigate();
 
-  const getAuthorsHelper = () => {
-    setFetchingAuthors(true);
-    getAuthors().then((authors) => {
-      setAllItems(authors);
-      setFetchingAuthors(false);
+  useEffect(() => {
+    refreshTable();
+  }, []);
+
+  const refreshTable = () => {
+    setTableLoading(true);
+    getAuthors().then((items) => {
+      setAllItems(items);
+      setTableLoading(false);
     });
   };
 
-  useEffect(() => {
-    getAuthorsHelper();
-  }, []);
-
-  const handleEdit = (id) => {};
-  const handleCreate = () => {};
-  const handleDelete = () => {
-    const selectedId = selectedItems[0].id;
+  function handleDelete() {
     const confirm = window.confirm(
-      `Are you sure you want to delete user ${selectedItems[0].name}`
+      `Are you sure you wish to delete author "${selectedItems[0].id}"?`
     );
     if (confirm) {
-      deleteAuthor(selectedId).then(() => {
-        console.log('Author deleted');
-        props.setShowNotifications([
+      deleteAuthor(selectedItems[0].id).then(() => {
+        console.log('Author deleted');
+        getAuthors().then((items) => {
+          setAllItems(items);
+        });
+        props.addNotification([
           {
             type: 'success',
-            content: `Author deleted successfully`,
+            content: 'Resource deleted successfully',
             dismissible: true,
-            onDismiss: () => {
-              props.setShowNotifications([]);
-            },
+            onDismiss: () => props.addNotification([]),
           },
         ]);
-        getAuthorsHelper();
       });
     }
-  };
+  }
+
+  function handleEdit() {
+    history(`/author/${selectedItems[0].id}`);
+  }
+
+  function handleCreate() {
+    history('/author/');
+  }
 
   return (
     <Table
       {...collectionProps}
-      loadingText="Fetching authors.."
-      loading={fetchingAuthors}
+      loading={tableLoading}
+      loadingText="Loading Table..."
       header={
         <Header
           counter={
             selectedItems.length
-              ? `${selectedItems.length}/${allItems.length}`
-              : `${allItems.length}`
+              ? `(${selectedItems.length}/${allItems.length})`
+              : `(${allItems.length})`
           }
           actions={
             <SpaceBetween size="xs" direction="horizontal">
-              <Button
-                disabled={selectedItems.length === 0}
-                onClick={handleDelete}
-              >
-                Delete
-              </Button>
               <Button
                 disabled={selectedItems.length === 0}
                 onClick={handleEdit}
               >
                 Edit
               </Button>
-              <Button onClick={handleCreate}>Create Author</Button>
+              <Button
+                disabled={selectedItems.length === 0}
+                onClick={handleDelete}
+              >
+                Delete
+              </Button>
+              <Button variant="primary" onClick={handleCreate}>
+                Create Author
+              </Button>
             </SpaceBetween>
           }
         >
           Authors
         </Header>
       }
-      columnDefinitions={COLUMN_DEFNITIONS}
-      visibleColumns={preferences.visibleContent}
       filter={
         <TextFilter
           {...filterProps}
-          filteringPlaceholder="Find an Author..."
-          countText={`${filteredItemsCount} match found`}
+          filteringPlaceholder="Find text..."
+          countText={filteredItemsCount}
         />
       }
+      columnDefinitions={COLUMN_DEFINITIONS}
+      visibleColumns={preferences.visibleContent}
       pagination={<Pagination {...paginationProps} />}
       preferences={
         <MyCollectionPreferences
           preferences={preferences}
-          setPreferences={handleSetPreferences}
+          setPreferences={setPreferences}
         />
       }
       items={items}
       selectionType="single"
-    ></Table>
+    />
   );
 }
-
-export default AuthorsList;

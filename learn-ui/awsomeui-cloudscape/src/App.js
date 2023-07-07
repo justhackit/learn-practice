@@ -9,6 +9,7 @@ import NavigationDrawer from './components/Navigation/NavigationDrawer';
 import ToolsDrawer from './components/Navigation/ToolsDrawer';
 import Dashboard from './components/Navigation/Dashboard';
 import AuthorsList from './components/Authors/AuthorsList';
+import AuthorDetails from './components/Authors/AuthorDetails';
 
 function NotFoundPage() {
   return <Box variant="h1">404 Page Not Found</Box>;
@@ -30,6 +31,10 @@ function App() {
               element={
                 <AuthorsList setShowNotifications={setShowNotifications} />
               }
+            ></Route>
+            <Route
+              path="/author/:authorId?"
+              element={<AuthorDetails addNotification={setShowNotifications} />}
             ></Route>
             <Route path="*" element={<NotFoundPage />}></Route>
           </Routes>

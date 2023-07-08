@@ -31,6 +31,7 @@ const NavigationDrawer = () => {
             },
           ],
         },
+        { type: 'link', text: 'Logout', href: '/logout' },
       ]}
       onFollow={(event) => {
         if (!event.detail.external) {

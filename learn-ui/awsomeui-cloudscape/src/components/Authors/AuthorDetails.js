@@ -41,12 +41,12 @@ export default function AuthorDetails(props) {
       updateAuthor({ id, name, country }).then((json) => {
         console.log('Author updated successfully');
         console.log(json);
-        props.addNotification([
+        props.setShowNotifications([
           {
             type: 'success',
             content: 'Resource updated successfully',
             dismissible: true,
-            onDismiss: () => props.addNotification([]),
+            onDismiss: () => props.setShowNotifications([]),
           },
         ]);
         history('/authors');
@@ -55,12 +55,12 @@ export default function AuthorDetails(props) {
       createAuthor({ name, country }).then((json) => {
         console.log('Author created successfully');
         console.log(json);
-        props.addNotification([
+        props.setShowNotifications([
           {
             type: 'success',
             content: 'Resource created successfully',
             dismissible: true,
-            onDismiss: () => props.addNotification([]),
+            onDismiss: () => props.setShowNotifications([]),
           },
         ]);
         history('/authors');

@@ -157,12 +157,12 @@ export default function AuthorsList(props) {
         getAuthors().then((items) => {
           setAllItems(items);
         });
-        props.addNotification([
+        props.setShowNotifications([
           {
             type: 'success',
             content: 'Resource deleted successfully',
             dismissible: true,
-            onDismiss: () => props.addNotification([]),
+            onDismiss: () => props.setShowNotifications([]),
           },
         ]);
       });

@@ -19,8 +19,6 @@ export default function AuthorDetails(props) {
   const history = useNavigate();
   const { authorId } = useParams();
 
-  console.log('authorId: ', authorId);
-
   function handleCancel() {
     history('/authors');
   }

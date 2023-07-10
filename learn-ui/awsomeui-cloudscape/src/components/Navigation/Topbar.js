@@ -1,9 +1,15 @@
-import { useState } from 'react';
+import { useState, useContext } from 'react';
 import Input from '@cloudscape-design/components/input';
 import { Auth } from 'aws-amplify';
 import TopNavigation from '@cloudscape-design/components/top-navigation';
+
+import { UserContext } from '../..';
+
 const Topbar = () => {
   const [searchValue, setSearchValue] = useState('');
+  const { user } = useContext(UserContext);
+  const { name, email } = user;
+  console.log(name);
   const i18nStrings = {
     searchIconAriaLabel: 'Search',
     searchDismissIconAriaLabel: 'Close search',
@@ -50,7 +56,7 @@ const Topbar = () => {
       i18nStrings={i18nStrings}
       identity={{
         href: '#',
-        title: 'Service name',
+        title: 'My Demo App',
         logo: { src: 'logo192.png', alt: 'Service name logo' },
       }}
       search={
@@ -79,8 +85,8 @@ const Topbar = () => {
         },
         {
           type: 'menu-dropdown',
-          text: 'Customer name',
-          description: 'customer@example.com',
+          text: name,
+          description: email,
           iconName: 'user-profile',
           items: profileActions,
           onItemClick: (eve) => {

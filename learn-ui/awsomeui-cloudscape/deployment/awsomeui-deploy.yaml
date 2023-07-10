@@ -1,0 +1,28 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: awsomeui
+  name: awsomeui-deployment
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: awsomeui-deployment
+  strategy:
+    type: RollingUpdate
+  template:
+    metadata:
+      labels:
+        app: awsomeui-deployment
+    spec:
+      containers:
+        - name: awsomeui-deployment
+          image: ajayedap/playground:awsomeui
+          args:
+            - 'nginx'
+            - '-g'
+            - 'daemon off;'
+          imagePullPolicy: Always
+      imagePullSecrets:
+        - name: dockercreds

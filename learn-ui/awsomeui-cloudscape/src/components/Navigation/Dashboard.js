@@ -8,7 +8,7 @@ import {
   Link,
 } from '@cloudscape-design/components';
 
-export default () => {
+const Dashboard = () => {
   return (
     <SpaceBetween>
       <Box variant="h1">Dashboard</Box>
@@ -49,3 +49,4 @@ export default () => {
     </SpaceBetween>
   );
 };
+export default Dashboard;

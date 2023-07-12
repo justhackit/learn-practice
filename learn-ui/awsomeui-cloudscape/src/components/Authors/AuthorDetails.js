@@ -27,22 +27,21 @@ export default function AuthorDetails(props) {
     event.preventDefault();
 
     if (!name) {
-      alert('Please provide a name for this author');
+      alert('Please provide a name for this author');
       return;
     }
     if (!country) {
-      alert('Please provide a country for this author');
+      alert('Please provide a country for this author');
       return;
     }
 
     if (authorId) {
       updateAuthor({ id, name, country }).then((json) => {
-        console.log('Author updated successfully');
-        console.log(json);
+        console.log('Author updated successfully');
         props.setShowNotifications([
           {
             type: 'success',
-            content: 'Resource updated successfully',
+            content: 'Resource updated successfully',
             dismissible: true,
             onDismiss: () => props.setShowNotifications([]),
           },
@@ -51,12 +50,11 @@ export default function AuthorDetails(props) {
       });
     } else {
       createAuthor({ name, country }).then((json) => {
-        console.log('Author created successfully');
-        console.log(json);
+        console.log('Author created successfully');
         props.setShowNotifications([
           {
             type: 'success',
-            content: 'Resource created successfully',
+            content: 'Resource created successfully',
             dismissible: true,
             onDismiss: () => props.setShowNotifications([]),
           },
@@ -89,14 +87,14 @@ export default function AuthorDetails(props) {
         </SpaceBetween>
       }
       header={
-        <Header variant="h1" description="Author details">
-          {authorId ? 'Edit Author' : 'Create Author'}
+        <Header variant="h1" description="Author details">
+          {authorId ? 'Edit Author' : 'Create Author'}
         </Header>
       }
     >
       <Container header={<Header variant="h2">Author</Header>}>
         <SpaceBetween direction="vertical" size="l">
-          <FormField label="Author Id" description="Author Id">
+          <FormField label="Author Id" description="Author Id">
             <Input
               value={id}
               disabled={true}

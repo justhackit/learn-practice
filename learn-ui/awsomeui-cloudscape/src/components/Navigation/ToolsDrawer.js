@@ -1,7 +1,7 @@
 import React from 'react';
 import { HelpPanel } from '@cloudscape-design/components';
 
-export default () => {
+const ToolsDrawer = () => {
   return (
     <HelpPanel header={<h2>About Clouscape UI App</h2>}>
       <div>
@@ -28,3 +28,5 @@ export default () => {
     </HelpPanel>
   );
 };
+
+export default ToolsDrawer;

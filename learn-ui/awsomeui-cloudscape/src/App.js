@@ -1,11 +1,13 @@
 // Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved. // SPDX-License-Identifier: MIT-0
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 
-import { UserContext } from '.';
 import { withAuthenticator } from '@aws-amplify/ui-react';
 import { AppLayout, Flashbar } from '@cloudscape-design/components';
 import { Box } from '@cloudscape-design/components';
+
+import { useDispatch } from 'react-redux';
+import { signIn } from './state-slices/authSlice';
 
 import Topbar from './components/Navigation/Topbar';
 import NavigationDrawer from './components/Navigation/NavigationDrawer';
@@ -22,9 +24,14 @@ function NotFoundPage() {
 
 function App({ signOut, user }) {
   const [showNotifications, setShowNotifications] = useState([]);
-  const userDetails = buildUserDetails(user);
+  const dispatch = useDispatch();
+  useEffect(() => {
+    const userDetails = buildUserDetails(user);
+    dispatch(signIn(userDetails));
+  }, []);
+
   return (
-    <UserContext.Provider value={userDetails}>
+    <>
       <div id="h" style={{ position: 'sticky', top: 0, zIndex: 1002 }}>
         <Topbar signOutUser={signOut} />
       </div>
@@ -53,7 +60,7 @@ function App({ signOut, user }) {
           }
         />
       </BrowserRouter>
-    </UserContext.Provider>
+    </>
   );
 }
 

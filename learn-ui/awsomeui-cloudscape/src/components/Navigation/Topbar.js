@@ -1,15 +1,13 @@
-import { useState, useContext } from 'react';
+import { useState } from 'react';
+import { useSelector } from 'react-redux';
 import Input from '@cloudscape-design/components/input';
 import { Auth } from 'aws-amplify';
 import TopNavigation from '@cloudscape-design/components/top-navigation';
 
-import { UserContext } from '../..';
-
 const Topbar = () => {
   const [searchValue, setSearchValue] = useState('');
-  const { user } = useContext(UserContext);
+  const user = useSelector((state) => state.userAuth.user);
   const { name, email } = user;
-  console.log(name);
   const i18nStrings = {
     searchIconAriaLabel: 'Search',
     searchDismissIconAriaLabel: 'Close search',
@@ -91,7 +89,6 @@ const Topbar = () => {
           items: profileActions,
           onItemClick: (eve) => {
             if (eve.detail.id === 'signout') {
-              console.log(`user clicked signout`);
               Auth.signOut();
             }
           },

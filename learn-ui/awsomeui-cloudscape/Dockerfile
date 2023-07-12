@@ -3,10 +3,12 @@
 FROM node:16-alpine as builder
 # Set the working directory to /app inside the container
 WORKDIR /app
-# Copy app files
-COPY . .
+# Copy dependency management files
+COPY package.json *lock.json ./ 
 # Install dependencies (npm ci makes sure the exact versions in the lockfile gets installed)
 RUN npm install
+# Copy app files
+COPY . .
 RUN npm run build
 # open the port where react service starts
 #EXPOSE 3000

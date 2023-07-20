@@ -7,7 +7,9 @@ import { AmplifyProvider } from '@aws-amplify/ui-react';
 import { store } from './store';
 import { Provider } from 'react-redux';
 
-const root = ReactDOM.createRoot(document.getElementById('root'));
+const root = ReactDOM.createRoot(
+  document.getElementById('root') as HTMLElement
+);
 //Configure AWS Cognito values
 Amplify.configure({
   Auth: {

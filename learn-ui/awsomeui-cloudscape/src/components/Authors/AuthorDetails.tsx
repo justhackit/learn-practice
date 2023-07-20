@@ -1,3 +1,4 @@
+import React from 'react';
 import {
   Form,
   FormField,
@@ -6,16 +7,25 @@ import {
   Header,
   SpaceBetween,
   Button,
+  ButtonProps,
+  FlashbarProps,
 } from '@cloudscape-design/components';
 import { useEffect, useState } from 'react';
 import { createAuthor, getAuthor, updateAuthor } from './AuthorsService';
 import { useNavigate } from 'react-router-dom';
 import { useParams } from 'react-router-dom';
+import { CancelableEventHandler } from '@cloudscape-design/components/internal/events';
 
-export default function AuthorDetails(props) {
-  const [id, setId] = useState();
-  const [name, setName] = useState();
-  const [country, setCountry] = useState();
+interface Props {
+  setShowNotifications: (
+    notifications: FlashbarProps.MessageDefinition[]
+  ) => void;
+}
+
+export default function AuthorDetails(props: Props) {
+  const [id, setId] = useState<string>();
+  const [name, setName] = useState<string>();
+  const [country, setCountry] = useState<string>();
   const history = useNavigate();
   const { authorId } = useParams();
 
@@ -23,7 +33,9 @@ export default function AuthorDetails(props) {
     history('/authors');
   }
 
-  function handleSubmit(event) {
+  const handleSubmit: CancelableEventHandler<ButtonProps.ClickDetail> = (
+    event
+  ) => {
     event.preventDefault();
 
     if (!name) {
@@ -62,7 +74,7 @@ export default function AuthorDetails(props) {
         history('/authors');
       });
     }
-  }
+  };
 
   useEffect(() => {
     if (authorId) {
@@ -96,20 +108,20 @@ export default function AuthorDetails(props) {
         <SpaceBetween direction="vertical" size="l">
           <FormField label="Author Id" description="Author Id">
             <Input
-              value={id}
+              value={id!}
               disabled={true}
               onChange={(event) => setId(event.detail.value)}
             />
           </FormField>
           <FormField label="Name" description="Name">
             <Input
-              value={name}
+              value={name!}
               onChange={(event) => setName(event.detail.value)}
             />
           </FormField>
           <FormField label="Country" description="Country">
             <Input
-              value={country}
+              value={country!}
               onChange={(event) => setCountry(event.detail.value)}
             />
           </FormField>

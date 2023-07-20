@@ -1,4 +1,6 @@
-export const buildUserDetails = (user) => {
+import { UserAuthState } from '../state-slices/authSlice';
+
+export const buildUserDetails = (user: any) => {
   const transformed = {
     user: {
       name: user.signInUserSession.idToken.payload.name,

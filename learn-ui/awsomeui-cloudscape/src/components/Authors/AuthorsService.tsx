@@ -6,11 +6,17 @@ export async function getAuthors() {
   return authors;
 }
 
-export async function deleteAuthor(id) {
+export async function deleteAuthor(id: string) {
   return fetch(`${baseUrl}/${id}`, { method: 'DELETE' });
 }
 
-export async function createAuthor(author) {
+export interface Author {
+  id?: string;
+  name: string;
+  country: string;
+}
+
+export async function createAuthor(author: Author) {
   return fetch(baseUrl, {
     method: 'POST',
     headers: { 'Content-type': 'application/json' },
@@ -18,11 +24,11 @@ export async function createAuthor(author) {
   }).then((res) => res.json());
 }
 
-export async function getAuthor(id) {
+export async function getAuthor(id: string) {
   return fetch(`${baseUrl}/${id}`).then((res) => res.json());
 }
 
-export async function updateAuthor(author) {
+export async function updateAuthor(author: Author) {
   return fetch(`${baseUrl}/${author.id}`, {
     method: 'PUT',
     headers: { 'Content-type': 'application/json' },

@@ -8,7 +8,7 @@ const NavigationDrawer = () => {
   return (
     <SideNavigation
       activeHref={activeHref}
-      header={{ text: 'A Cloudscape App' }}
+      header={{ href: '/', text: 'A Cloudscape App' }}
       items={[
         { type: 'link', text: 'Dashboard', href: '/' },
         {

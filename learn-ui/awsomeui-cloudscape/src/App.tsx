@@ -2,8 +2,14 @@
 import React, { useState, useEffect } from 'react';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 
+import { SignOut } from '@aws-amplify/ui-react/dist/types/components/Authenticator/Authenticator';
+import { AmplifyUser } from '@aws-amplify/ui';
 import { withAuthenticator } from '@aws-amplify/ui-react';
-import { AppLayout, Flashbar } from '@cloudscape-design/components';
+import {
+  AppLayout,
+  Flashbar,
+  FlashbarProps,
+} from '@cloudscape-design/components';
 import { Box } from '@cloudscape-design/components';
 
 import { useDispatch } from 'react-redux';
@@ -22,18 +28,26 @@ function NotFoundPage() {
   return <Box variant="h1">404 Page Not Found</Box>;
 }
 
-function App({ signOut, user }) {
-  const [showNotifications, setShowNotifications] = useState([]);
+interface Props {
+  signOut?: SignOut;
+  user?: AmplifyUser;
+}
+
+const App = (props: Props) => {
+  const [showNotifications, setShowNotifications] = useState(
+    [] as FlashbarProps.MessageDefinition[]
+  );
   const dispatch = useDispatch();
   useEffect(() => {
-    const userDetails = buildUserDetails(user);
+    console.log(`calling App.tsx's useEffect()...`);
+    const userDetails = buildUserDetails(props.user);
     dispatch(signIn(userDetails));
-  }, []);
+  }, [props.user, dispatch]);
 
   return (
     <>
       <div id="h" style={{ position: 'sticky', top: 0, zIndex: 1002 }}>
-        <Topbar signOutUser={signOut} />
+        <Topbar />
       </div>
       <BrowserRouter basename="/awsomeui">
         <AppLayout
@@ -62,9 +76,6 @@ function App({ signOut, user }) {
       </BrowserRouter>
     </>
   );
-}
+};
 
-export default withAuthenticator(App, false, {
-  socialProviders: ['google'],
-  includeGreetings: true,
-});
+export default withAuthenticator(App);

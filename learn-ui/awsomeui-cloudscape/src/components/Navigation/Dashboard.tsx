@@ -10,7 +10,7 @@ import {
 
 const Dashboard = () => {
   return (
-    <SpaceBetween>
+    <SpaceBetween size={'s'}>
       <Box variant="h1">Dashboard</Box>
       <Container
         header={
@@ -19,7 +19,7 @@ const Dashboard = () => {
           </Header>
         }
       >
-        <ColumnLayout columns="4">
+        <ColumnLayout columns={4}>
           <div>
             <Box>Authors</Box>
             <Link fontSize="display-l" href="#">

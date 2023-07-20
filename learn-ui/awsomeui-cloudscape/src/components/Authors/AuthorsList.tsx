@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, Dispatch, SetStateAction } from 'react';
 import {
   Box,
   Button,
@@ -8,6 +8,8 @@ import {
   TextFilter,
   SpaceBetween,
   CollectionPreferences,
+  CollectionPreferencesProps,
+  FlashbarProps,
 } from '@cloudscape-design/components';
 //import { authors } from './AuthorsDB'
 import { useCollection } from '@cloudscape-design/collection-hooks';
@@ -15,12 +17,18 @@ import { getAuthors, deleteAuthor } from './AuthorsService';
 import { useNavigate } from 'react-router-dom';
 import { Link } from 'react-router-dom';
 
+export interface ItemType {
+  id: string;
+  name: string;
+  country: string;
+}
+
 const COLUMN_DEFINITIONS = [
   {
     id: 'id',
     sortingField: 'id',
     header: 'Id',
-    cell: (item) => (
+    cell: (item: ItemType) => (
       <div>
         <Link to={`/author/${item.id}`}>{item.id}</Link>
       </div>
@@ -31,19 +39,25 @@ const COLUMN_DEFINITIONS = [
     id: 'name',
     sortingField: 'name',
     header: 'Name',
-    cell: (item) => item.name,
+    cell: (item: ItemType) => item.name,
     minWidth: 160,
   },
   {
     id: 'country',
     sortingField: 'country',
     header: 'Country',
-    cell: (item) => item.country,
+    cell: (item: ItemType) => item.country,
     minWidth: 100,
   },
 ];
 
-const MyCollectionPreferences = ({ preferences, setPreferences }) => {
+const MyCollectionPreferences = ({
+  preferences,
+  setPreferences,
+}: {
+  preferences: CollectionPreferencesProps.Preferences;
+  setPreferences: (preferences: CollectionPreferencesProps.Preferences) => void;
+}) => {
   return (
     <CollectionPreferences
       title="Preferences"
@@ -80,7 +94,13 @@ const MyCollectionPreferences = ({ preferences, setPreferences }) => {
   );
 };
 
-function EmptyState({ title, subtitle, action }) {
+type EmptyState = {
+  title: string;
+  subtitle: string;
+  action: JSX.Element;
+};
+
+function EmptyState({ title, subtitle, action }: EmptyState) {
   return (
     <Box textAlign="center">
       <Box variant="strong">{title}</Box>
@@ -92,12 +112,19 @@ function EmptyState({ title, subtitle, action }) {
   );
 }
 
-export default function AuthorsList(props) {
-  const [allItems, setAllItems] = useState([]);
-  const [preferences, setPreferences] = useState({
-    pageSize: 10,
-    visibleContent: ['id', 'name', 'country'],
-  });
+interface Props {
+  setShowNotifications: (
+    notifications: FlashbarProps.MessageDefinition[]
+  ) => void;
+}
+
+export default function AuthorsList(props: Props) {
+  const [allItems, setAllItems] = useState<ItemType[]>([]);
+  const [preferences, setPreferences] =
+    useState<CollectionPreferencesProps.Preferences>({
+      pageSize: 10,
+      visibleContent: ['id', 'name', 'country'],
+    });
   const [tableLoading, setTableLoading] = useState(false);
   const {
     items,
@@ -132,7 +159,9 @@ export default function AuthorsList(props) {
     selection: {},
   });
 
-  const { selectedItems } = collectionProps;
+  const selectedItems = collectionProps.selectedItems;
+  const selectedItem =
+    selectedItems && selectedItems.length > 0 ? selectedItems[0].id : undefined;
   const history = useNavigate();
 
   useEffect(() => {
@@ -149,10 +178,10 @@ export default function AuthorsList(props) {
 
   function handleDelete() {
     const confirm = window.confirm(
-      `Are you sure you wish to delete author "${selectedItems[0].id}"?`
+      `Are you sure you wish to delete author "${selectedItem}"?`
     );
     if (confirm) {
-      deleteAuthor(selectedItems[0].id).then(() => {
+      deleteAuthor(selectedItem!).then(() => {
         console.log('Author deleted');
         getAuthors().then((items) => {
           setAllItems(items);
@@ -170,7 +199,7 @@ export default function AuthorsList(props) {
   }
 
   function handleEdit() {
-    history(`/author/${selectedItems[0].id}`);
+    history(`/author/${selectedItem}`);
   }
 
   function handleCreate() {
@@ -185,20 +214,20 @@ export default function AuthorsList(props) {
       header={
         <Header
           counter={
-            selectedItems.length
+            selectedItems?.length
               ? `(${selectedItems.length}/${allItems.length})`
               : `(${allItems.length})`
           }
           actions={
             <SpaceBetween size="xs" direction="horizontal">
               <Button
-                disabled={selectedItems.length === 0}
+                disabled={selectedItems?.length === 0}
                 onClick={handleEdit}
               >
                 Edit
               </Button>
               <Button
-                disabled={selectedItems.length === 0}
+                disabled={selectedItems?.length === 0}
                 onClick={handleDelete}
               >
                 Delete
@@ -216,7 +245,7 @@ export default function AuthorsList(props) {
         <TextFilter
           {...filterProps}
           filteringPlaceholder="Find text..."
-          countText={filteredItemsCount}
+          countText={filteredItemsCount?.toString()}
         />
       }
       columnDefinitions={COLUMN_DEFINITIONS}

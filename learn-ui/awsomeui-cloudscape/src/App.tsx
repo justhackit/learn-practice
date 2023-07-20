@@ -39,7 +39,6 @@ const App = (props: Props) => {
   );
   const dispatch = useDispatch();
   useEffect(() => {
-    console.log(`calling App.tsx's useEffect()...`);
     const userDetails = buildUserDetails(props.user);
     dispatch(signIn(userDetails));
   }, [props.user, dispatch]);

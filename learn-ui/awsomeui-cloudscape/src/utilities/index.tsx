@@ -1,5 +1,3 @@
-import { UserAuthState } from '../state-slices/authSlice';
-
 export const buildUserDetails = (user: any) => {
   const transformed = {
     user: {

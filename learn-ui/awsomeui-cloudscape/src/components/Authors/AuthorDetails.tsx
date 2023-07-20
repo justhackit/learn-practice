@@ -1,4 +1,3 @@
-import React from 'react';
 import {
   Form,
   FormField,
@@ -84,7 +83,7 @@ export default function AuthorDetails(props: Props) {
         setCountry(author.country);
       });
     }
-  }, []);
+  }, [authorId]);
 
   return (
     <Form

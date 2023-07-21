@@ -29,7 +29,7 @@ const App = () => {
           navigation={<NavigationDrawer></NavigationDrawer>}
           tools={<ToolsDrawer></ToolsDrawer>}
           notifications={<Flashbar items={showNotifications} />}
-          content={<AppRoutes setShowNotifications={setShowNotifications} />}
+          content={<AppRoutes setNotifications={setShowNotifications} />}
         />
       </BrowserRouter>
     </Authenticator.Provider>

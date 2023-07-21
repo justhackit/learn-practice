@@ -16,6 +16,7 @@ const NavigationDrawer = () => {
           text: 'Resources',
           items: [
             { type: 'link', text: 'Authors', href: '/authors' },
+            { type: 'link', text: 'Debts & Credits', href: '/debts-credits' },
             { type: 'link', text: 'Books', href: '/books' },
           ],
         },

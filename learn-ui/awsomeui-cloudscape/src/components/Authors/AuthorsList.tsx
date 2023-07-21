@@ -20,9 +20,7 @@ import {
 } from './authorslist-table-config';
 
 interface Props {
-  setShowNotifications: (
-    notifications: FlashbarProps.MessageDefinition[]
-  ) => void;
+  setNotifications: (notifications: FlashbarProps.MessageDefinition[]) => void;
 }
 
 export default function AuthorsList(props: Props) {
@@ -93,12 +91,12 @@ export default function AuthorsList(props: Props) {
         getAuthors().then((items) => {
           setAllItems(items);
         });
-        props.setShowNotifications([
+        props.setNotifications([
           {
             type: 'success',
             content: 'Resource deleted successfully',
             dismissible: true,
-            onDismiss: () => props.setShowNotifications([]),
+            onDismiss: () => props.setNotifications([]),
           },
         ]);
       });

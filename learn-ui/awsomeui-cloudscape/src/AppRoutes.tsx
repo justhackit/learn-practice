@@ -7,15 +7,14 @@ import RequireAuth from './components/Navigation/RequireAuth';
 import AuthorsList from './components/Authors/AuthorsList';
 import AuthorDetails from './components/Authors/AuthorDetails';
 import Login from './components/Navigation/Login';
+import DebtAndCredits from './components/Monetory/DebtsAndCredits';
 
 function NotFoundPage() {
   return <Box variant="h1">404 Page Not Found</Box>;
 }
 
 interface Props {
-  setShowNotifications: (
-    notifications: FlashbarProps.MessageDefinition[]
-  ) => void;
+  setNotifications: (notifications: FlashbarProps.MessageDefinition[]) => void;
 }
 const AppRoutes = (props: Props): JSX.Element => {
   return (
@@ -26,14 +25,20 @@ const AppRoutes = (props: Props): JSX.Element => {
         path="/authors"
         element={
           <RequireAuth>
-            <AuthorsList setShowNotifications={props.setShowNotifications} />
+            <AuthorsList setNotifications={props.setNotifications} />
           </RequireAuth>
         }
       ></Route>
       <Route
         path="/author/:authorId?"
+        element={<AuthorDetails setNotifications={props.setNotifications} />}
+      ></Route>
+      <Route
+        path="/debts-credits"
         element={
-          <AuthorDetails setShowNotifications={props.setShowNotifications} />
+          <RequireAuth>
+            <DebtAndCredits />
+          </RequireAuth>
         }
       ></Route>
       <Route path="*" element={<NotFoundPage />}></Route>

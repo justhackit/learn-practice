@@ -16,9 +16,7 @@ import { useParams } from 'react-router-dom';
 import { CancelableEventHandler } from '@cloudscape-design/components/internal/events';
 
 interface Props {
-  setShowNotifications: (
-    notifications: FlashbarProps.MessageDefinition[]
-  ) => void;
+  setNotifications: (notifications: FlashbarProps.MessageDefinition[]) => void;
 }
 
 export default function AuthorDetails(props: Props) {
@@ -49,12 +47,12 @@ export default function AuthorDetails(props: Props) {
     if (authorId) {
       updateAuthor({ id, name, country }).then((json) => {
         console.log('Author updated successfully');
-        props.setShowNotifications([
+        props.setNotifications([
           {
             type: 'success',
             content: 'Resource updated successfully',
             dismissible: true,
-            onDismiss: () => props.setShowNotifications([]),
+            onDismiss: () => props.setNotifications([]),
           },
         ]);
         history('/authors');
@@ -62,12 +60,12 @@ export default function AuthorDetails(props: Props) {
     } else {
       createAuthor({ name, country }).then((json) => {
         console.log('Author created successfully');
-        props.setShowNotifications([
+        props.setNotifications([
           {
             type: 'success',
             content: 'Resource created successfully',
             dismissible: true,
-            onDismiss: () => props.setShowNotifications([]),
+            onDismiss: () => props.setNotifications([]),
           },
         ]);
         history('/authors');

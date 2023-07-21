@@ -1,15 +1,15 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import Input from '@cloudscape-design/components/input';
 import { Auth } from 'aws-amplify';
 import TopNavigation from '@cloudscape-design/components/top-navigation';
 import { UserAuthState, signOut } from '../../state-slices/authSlice';
+import { ButtonDropdownProps } from '@cloudscape-design/components';
 
 const Topbar = () => {
   const [searchValue, setSearchValue] = useState('');
   const user = useSelector((state: UserAuthState) => state.userAuth.user);
-  const { name, email } = user;
   const dispatch = useDispatch();
   const i18nStrings = {
     searchIconAriaLabel: 'Search',
@@ -20,44 +20,47 @@ const Topbar = () => {
     overflowMenuDismissIconAriaLabel: 'Close menu',
   };
 
-  const profileActions = [
-    { type: 'button', id: 'profile', text: 'Profile' },
-    { type: 'button', id: 'preferences', text: 'Preferences' },
-    { type: 'button', id: 'security', text: 'Security' },
-    {
-      type: 'menu-dropdown',
-      id: 'support-group',
-      text: 'Support',
-      items: [
-        {
-          id: 'documentation',
-          text: 'Documentation',
-          href: '#',
-          external: true,
-          externalIconAriaLabel: ' (opens in new tab)',
-        },
-        {
-          id: 'feedback',
-          text: 'Feedback',
-          href: '#',
-          external: true,
-          externalIconAriaLabel: ' (opens in new tab)',
-        },
-        { id: 'support', text: 'Customer support' },
-      ],
-    },
-    {
-      type: 'button',
-      id: 'signout',
-      text: 'Sign out',
-    },
-  ];
+  const [profileActions, setProfileActions] = useState(
+    [] as ButtonDropdownProps.Items
+  );
+
+  useEffect(() => {
+    const profileActionsOfGuestUser: ButtonDropdownProps.Items = [
+      { id: 'signin', text: 'Sign In', href: '/awsomeui/login' },
+    ];
+    const profileActionsOfSignInUser: ButtonDropdownProps.Items = [
+      { id: 'profile', text: 'Profile' },
+      { id: 'security', text: 'Security' },
+      {
+        text: 'Support',
+        items: [
+          {
+            id: 'feedback',
+            text: 'Feedback',
+            href: '#',
+            external: true,
+            externalIconAriaLabel: ' (opens in new tab)',
+          },
+          { id: 'support', text: 'Customer support' },
+        ],
+      },
+      {
+        text: 'Sign out',
+        id: 'signout',
+      },
+    ];
+    if (user.name && user.name.length > 0) {
+      setProfileActions(profileActionsOfSignInUser);
+    } else {
+      setProfileActions(profileActionsOfGuestUser);
+    }
+  }, [user]);
   return (
     <TopNavigation
       i18nStrings={i18nStrings}
       identity={{
         href: '#',
-        title: 'My Cloudsome App',
+        title: 'My Cloudsome App !',
         logo: { src: 'logo192.png', alt: 'Service name logo' },
       }}
       search={
@@ -86,13 +89,14 @@ const Topbar = () => {
         },
         {
           type: 'menu-dropdown',
-          text: name,
-          description: email,
+          text: user.name,
+          description: user.email,
           iconName: 'user-profile',
           items: profileActions,
           onItemClick: (eve) => {
             if (eve.detail.id === 'signout') {
               dispatch(signOut());
+              console.log('signing out the user');
               Auth.signOut();
             }
           },

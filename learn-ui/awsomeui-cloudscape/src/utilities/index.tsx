@@ -1,13 +1,16 @@
-export const buildUserDetails = (user: any) => {
+import { CognitoIdToken } from 'amazon-cognito-identity-js';
+
+export const buildUserDetails = (userToken: CognitoIdToken) => {
+  const decodedPayload = userToken.decodePayload();
   const transformed = {
     user: {
-      name: user.signInUserSession.idToken.payload.name,
-      email: user.signInUserSession.idToken.payload.email,
-      groups: user.signInUserSession.idToken.payload['cognito:groups'],
+      name: decodedPayload['name'],
+      email: decodedPayload['email'],
+      groups: decodedPayload['cognito:groups'],
     },
     auth: {
-      token_issued_at: user.signInUserSession.idToken.payload.iat,
-      token_expires_at: user.signInUserSession.idToken.payload.exp,
+      token_issued_at: decodedPayload['iat'],
+      token_expires_at: decodedPayload['exp'],
     },
   };
   return transformed;

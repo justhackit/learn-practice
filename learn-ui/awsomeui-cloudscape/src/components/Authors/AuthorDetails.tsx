@@ -8,6 +8,8 @@ import {
   Button,
   ButtonProps,
   FlashbarProps,
+  BreadcrumbGroup,
+  AppLayout,
 } from '@cloudscape-design/components';
 import { useEffect, useState } from 'react';
 import { createAuthor, getAuthor, updateAuthor } from './AuthorsService';
@@ -83,47 +85,66 @@ export default function AuthorDetails(props: Props) {
     }
   }, [authorId]);
 
+  const Breadcrumbs = () => (
+    <BreadcrumbGroup
+      items={[
+        { text: 'Authors', href: '/awsomeui/authors', type: 'link' },
+        {
+          text: 'Details',
+          href: '#',
+        },
+      ]}
+      ariaLabel="Breadcrumbs"
+    />
+  );
+
   return (
-    <Form
-      actions={
-        <SpaceBetween direction="horizontal" size="xs">
-          <Button variant="link" onClick={handleCancel}>
-            Cancel
-          </Button>
-          <Button variant="primary" onClick={handleSubmit}>
-            Submit
-          </Button>
-        </SpaceBetween>
+    <AppLayout
+      navigationHide={true}
+      breadcrumbs={<Breadcrumbs />}
+      content={
+        <Form
+          actions={
+            <SpaceBetween direction="horizontal" size="xs">
+              <Button variant="link" onClick={handleCancel}>
+                Cancel
+              </Button>
+              <Button variant="primary" onClick={handleSubmit}>
+                Submit
+              </Button>
+            </SpaceBetween>
+          }
+          header={
+            <Header variant="h1" description="Author details">
+              {authorId ? 'Edit Author' : 'Create Author'}
+            </Header>
+          }
+        >
+          <Container header={<Header variant="h2">Author</Header>}>
+            <SpaceBetween direction="vertical" size="l">
+              <FormField label="Author Id" description="Author Id">
+                <Input
+                  value={id!}
+                  disabled={true}
+                  onChange={(event) => setId(event.detail.value)}
+                />
+              </FormField>
+              <FormField label="Name" description="Name">
+                <Input
+                  value={name!}
+                  onChange={(event) => setName(event.detail.value)}
+                />
+              </FormField>
+              <FormField label="Country" description="Country">
+                <Input
+                  value={country!}
+                  onChange={(event) => setCountry(event.detail.value)}
+                />
+              </FormField>
+            </SpaceBetween>
+          </Container>
+        </Form>
       }
-      header={
-        <Header variant="h1" description="Author details">
-          {authorId ? 'Edit Author' : 'Create Author'}
-        </Header>
-      }
-    >
-      <Container header={<Header variant="h2">Author</Header>}>
-        <SpaceBetween direction="vertical" size="l">
-          <FormField label="Author Id" description="Author Id">
-            <Input
-              value={id!}
-              disabled={true}
-              onChange={(event) => setId(event.detail.value)}
-            />
-          </FormField>
-          <FormField label="Name" description="Name">
-            <Input
-              value={name!}
-              onChange={(event) => setName(event.detail.value)}
-            />
-          </FormField>
-          <FormField label="Country" description="Country">
-            <Input
-              value={country!}
-              onChange={(event) => setCountry(event.detail.value)}
-            />
-          </FormField>
-        </SpaceBetween>
-      </Container>
-    </Form>
+    />
   );
 }

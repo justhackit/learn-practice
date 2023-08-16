@@ -25,6 +25,7 @@ const Topbar = () => {
   );
 
   useEffect(() => {
+    console.log("From Topbar's useEffect(). User auth state changed");
     const profileActionsOfGuestUser: ButtonDropdownProps.Items = [
       { id: 'signin', text: 'Sign In', href: '/awsomeui/login' },
     ];

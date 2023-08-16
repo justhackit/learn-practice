@@ -12,7 +12,9 @@ const Login = () => {
   const navigate = useNavigate();
   let from = location.state?.from?.pathname || '/';
   useEffect(() => {
+    console.log(`From Login useEffect(). Route = ${route}`);
     if (route === 'authenticated') {
+      console.log(`From Login useEffect(). Navigating to ${from}`);
       navigate(from, { replace: true });
     }
   }, [route, navigate, from]);

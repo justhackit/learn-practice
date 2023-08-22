@@ -1,0 +1,13 @@
+{
+  "files": {
+    "main.css": "/awsomeui/static/css/main.f4e59c5a.css",
+    "main.js": "/awsomeui/static/js/main.4fc4b0fa.js",
+    "index.html": "/awsomeui/index.html",
+    "main.f4e59c5a.css.map": "/awsomeui/static/css/main.f4e59c5a.css.map",
+    "main.4fc4b0fa.js.map": "/awsomeui/static/js/main.4fc4b0fa.js.map"
+  },
+  "entrypoints": [
+    "static/css/main.f4e59c5a.css",
+    "static/js/main.4fc4b0fa.js"
+  ]
+}

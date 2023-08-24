@@ -24,7 +24,7 @@ const App = () => {
       <div id="h" style={{ position: 'sticky', top: 0, zIndex: 1002 }}>
         <Topbar />
       </div>
-      <BrowserRouter basename="/awsomeui">
+      <BrowserRouter>
         <AppLayout
           navigation={<NavigationDrawer></NavigationDrawer>}
           tools={<ToolsDrawer></ToolsDrawer>}

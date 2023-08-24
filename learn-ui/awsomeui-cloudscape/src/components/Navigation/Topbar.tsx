@@ -27,7 +27,7 @@ const Topbar = () => {
   useEffect(() => {
     console.log("From Topbar's useEffect(). User auth state changed");
     const profileActionsOfGuestUser: ButtonDropdownProps.Items = [
-      { id: 'signin', text: 'Sign In', href: '/awsomeui/login' },
+      { id: 'signin', text: 'Sign In', href: '/login' },
     ];
     const profileActionsOfSignInUser: ButtonDropdownProps.Items = [
       { id: 'profile', text: 'Profile' },
@@ -62,7 +62,7 @@ const Topbar = () => {
       identity={{
         href: '#',
         title: 'My Cloudsome App !',
-        logo: { src: 'logo192.png', alt: 'Service name logo' },
+        logo: { src: './logo192.png', alt: 'Service name logo' },
       }}
       search={
         <Input

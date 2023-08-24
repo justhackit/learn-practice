@@ -88,7 +88,7 @@ export default function AuthorDetails(props: Props) {
   const Breadcrumbs = () => (
     <BreadcrumbGroup
       items={[
-        { text: 'Authors', href: '/awsomeui/authors', type: 'link' },
+        { text: 'Authors', href: '/authors', type: 'link' },
         {
           text: 'Details',
           href: '#',

@@ -27,17 +27,17 @@ export class DeploymentService extends Construct {
                 origin: new S3Origin(hostingBucket),
                 viewerProtocolPolicy: ViewerProtocolPolicy.REDIRECT_TO_HTTPS,
             },
-            defaultRootObject: '/awsomeui/index.html',
+            defaultRootObject: 'index.html',
             errorResponses: [
                 {
                     httpStatus: 404,
                     responseHttpStatus: 200,
-                    responsePagePath: '/awsomeui/index.html',
+                    responsePagePath: '/index.html',
                 },
                 {
                     httpStatus: 403,
                     responseHttpStatus: 200,
-                    responsePagePath: '/awsomeui/index.html',
+                    responsePagePath: '/index.html',
                 },
             ],
             domainNames: ["awsomeui.ajaysquare.com"],
@@ -49,8 +49,7 @@ export class DeploymentService extends Construct {
             sources: [Source.asset(path)],
             destinationBucket: hostingBucket,
             distribution,
-            distributionPaths: ['/*'],
-            destinationKeyPrefix: "awsomeui/"
+            distributionPaths: ['/*']
         });
 
         new CfnOutput(this, 'CloudFrontURL', {
